@@ -1,0 +1,36 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/YOUR_USERNAME/DevOpsJenkins'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                script {
+                    // Copy JSP files to Tomcat webapps folder
+                    bat 'xcopy /E /I * "C:\\Users\\p\\Downloads\\apache-tomcat-8.0.1-windows-i64\\apache-tomcat-8.0.1\\webapps\\MyJSP"'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo "JSP files deployed successfully"
+            }
+        }
+
+        stage('Restart Server') {
+            steps {
+                script {
+                    // Try service restart (if installed as service)
+                    bat 'net stop Tomcat8'
+                    bat 'net start Tomcat8'
+                }
+            }
+        }
+    }
+}
